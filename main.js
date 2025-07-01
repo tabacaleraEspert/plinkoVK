@@ -75,11 +75,6 @@ function mostrarPantalla(id) {
     document.getElementById("imagenRandomContainer").style.display = (id === "gameScreen") ? "none" : "flex";
 }
 
-function irAlJuego() {
-    document.getElementById("bgm").play().catch(e => console.log("Error al reproducir música", e));
-    mostrarPantalla("gameScreen");
-    iniciarJuego();
-}
 
 function mostrarModalPremio(premio) {
     const modal = document.getElementById("premioModal");
