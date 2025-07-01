@@ -17,7 +17,7 @@ const imagenes = [
 
 document.getElementById("btnInstagram").addEventListener("click", irAlJuego);
 document.getElementById("btnCerrarModal").addEventListener("click", cerrarModal);
-document.getElementById("btnJugar").addEventListener("click", dropBall);
+// document.getElementById("btnJugar").addEventListener("click", dropBall);
 window.addEventListener("DOMContentLoaded", () => {
     cargarVideoAleatorio();
     cargarImagenAleatoria();
