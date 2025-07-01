@@ -1,0 +1,280 @@
+/* 🌌 Estilos base */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  color: white;
+  background: radial-gradient(#1b1c44, #0f0f25);
+  text-align: center;
+}
+
+.contenidoPrincipal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 80px;
+  width: 100%;
+}
+
+.screen {
+  display: none;
+  padding: 20px;
+}
+
+.screen.active {
+  display: block;
+}
+
+/* 📸 Imagen */
+#imagenRandomContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+#imagenRandom {
+  max-width: 250px;
+  width: 100%;
+  height: auto;
+}
+
+/* 🎥 Video */
+#videoBackground {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  opacity: 0.4;
+  pointer-events: none;
+  z-index: -2;
+}
+
+/* 📝 Formulario */
+#registerForm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  width: 100%;
+  max-width: 500px;
+}
+
+#registerForm input,
+#registerForm select,
+#registerForm button {
+  width: 100%;
+  margin: 10px 0;
+  padding: 14px;
+  font-size: 16px;
+  border: none;
+  border-radius: 6px;
+}
+
+#registerForm button {
+  background-color: #ffd700;
+  color: #000;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+#registerForm button:hover {
+  background-color: #e6c200;
+}
+
+#formScreen h1 {
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+
+/* 🟡 Instagram */
+.instagram-content {
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 20px;
+  border-radius: 12px;
+}
+
+.instagram-handle {
+  color: #ffd700;
+  font-weight: bold;
+  font-size: 20px;
+  display: block;
+  margin: 20px 0;
+}
+
+/* 🎉 Modal */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 9999;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+}
+
+.modal h1 {
+  font-size: 32px;
+  color: gold;
+}
+
+.modal p {
+  font-size: 20px;
+}
+
+.modal button {
+  margin-top: 20px;
+  padding: 12px 24px;
+  font-size: 18px;
+}
+
+#confettiCanvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* 📲 Mobile (hasta 480px) */
+@media (max-width: 480px) {
+
+  /* 1) Oculta siempre los screens que no estén activos */
+  .screen {
+    display: none !important;
+  }
+
+  .screen.active {
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+  }
+
+
+  /* Centrado y límites de ancho */
+  .contenidoPrincipal {
+    padding-top: 20px;
+  }
+
+  /* 📸 Imagen */
+  #imagenRandomContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 00px;
+
+  }
+
+  /* Imagen más pequeña */
+  #imagenRandom {
+    max-width: 80%;
+  }
+
+  /* Opcional: reducir opacidad/video si molesta */
+  #videoBackground {
+    opacity: 0.3;
+  }
+
+  #registerForm {
+    padding: 25px;
+    max-width: 400px;
+    /* evita formularios exageradamente anchos */
+    margin: 0 auto;
+    /* centra el form en la pantalla */
+    box-sizing: border-box;
+  }
+
+  /* Campos con dimensiones más razonables */
+  #registerForm input,
+  #registerForm select,
+  #registerForm button {
+    width: 100%;
+    max-width: 100%;
+    margin: 8px 0;
+    /* menos separación vertical */
+    padding: 12px;
+    /* un poco menos de “padding” interno */
+    font-size: 16px;
+    /* texto legible pero no gigante */
+  }
+
+  /* Ajuste de título */
+  #formScreen h1 {
+    font-size: 22px;
+    margin-bottom: 16px;
+  }
+
+  .instagram-content {
+    padding: 16px;
+    /* reduce un poco el “padding” para móviles */
+    border-radius: 8px;
+    /* ligero ajuste de curvatura */
+  }
+
+  /* CTA principal: @vankiff */
+  .instagram-handle {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 14px;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    background-color: #ffd700;
+    color: #000 !important;
+    border-radius: 6px;
+    margin-bottom: 12px;
+    margin-top: 40px;
+    transition: background-color 0.3s, transform 0.2s;
+  }
+
+  .instagram-handle:hover {
+    background-color: #e6c200;
+    transform: translateY(-2px);
+  }
+
+  /* Botón más grande y congruente con estilos de formulario */
+  .instagram-content button {
+    margin-top: 60px;
+    display: block;
+    /* ocupa toda la anchura disponible */
+    width: 100%;
+    max-width: 360px;
+    /* mantiene un tope lógico */
+    /* margin: 0 auto; */
+    /* centrado horizontal */
+    padding: 14px;
+    /* mayor “hit area” táctil */
+    font-size: 16px;
+    /* legible en pantalla pequeña */
+    background-color: #c0c0c0;
+    /* mismo color que tu botón de registro */
+    color: #000;
+    font-weight: bold;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  .instagram-content button:hover {
+    background-color: #e6c200;
+    /* feedback visual consistente */
+  }
+
+
+}
+

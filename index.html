@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Plinko Game</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <script src="https://cdn.bootcdn.net/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <link rel="stylesheet" href="./styles.css">
+
+</head>
+
+<body>
+  <video autoplay muted loop id="videoBackground">
+    <source src="" type="video/mp4" />
+    Tu navegador no soporta el video HTML5.
+  </video>
+
+  <div class="contenidoPrincipal">
+
+    <div id="imagenRandomContainer">
+      <img id="imagenRandom" src="" alt="Imagen aleatoria" />
+    </div>
+
+    <!-- Formulario -->
+    <div id="formScreen" class="screen ">
+      <h1>Registrate para jugar</h1>
+      <form id="registerForm">
+        <input type="text" id="nombreCompleto" placeholder="Nombre Completo" required />
+
+        <input type="email" id="email" placeholder="Email" required />
+        <input type="tel" id="telefono" placeholder="Teléfono" required />
+        <input type="text" id="cp" placeholder="Código Postal" required />
+        <input type="text" id="ciudad" placeholder="Ciudad" required />
+        <hr></hr>
+        <select id="edad" required>
+          <option value="">Seleccioná tu rango de edad</option>
+          <option value="18-24">18-24 años</option>
+          <option value="25-34">25-34 años</option>
+          <option value="35-44">35-44 años</option>
+          <option value="45-54">45-54 años</option>
+          <option value="55+">55 años o más</option>
+        </select>
+        <select id="marca" required>
+          <option value="">Seleccioná marca de fumo habitual</option>
+          <option value="Boca no tiene marido">Boca no tiene marido</option>
+          <option value="Boca no tiene mujer">Boca no tiene mujer</option>
+          <option value="Pero tiene en el culo">Pero tiene en el culo</option>
+          <option value="La pija de River Plate">La pija de River Plate</option>
+        </select>
+        <button type="submit">Continuar</button>
+      </form>
+    </div>
+
+    <!-- Instagram -->
+    <div id="instagramScreen" class="screen active">
+      <div class="instagram-content">
+        <h1>¡Seguinos en Instagram!</h1>
+        <a href="https://www.instagram.com/vankiff/" target="_blank" class="instagram-handle">@vankiff</a>
+        <button onclick="irAlJuego()">Ya seguí</button>
+      </div>
+    </div>
+
+    <!-- Juego -->
+    <div id="gameScreen" class="screen">
+      <button onclick="dropBall()">🎲 JUGAR</button>
+      <div id="can"></div>
+      <div id="prizeOverlay"></div>
+    </div>
+
+  </div>
+
+  <div id="premioModal" class="modal">
+    <h1>🎉 ¡Ganaste un premio! 🎉</h1>
+    <p id="textoPremio"></p>
+    <button onclick="cerrarModal()">Cerrar</button>
+    <canvas id="confettiCanvas"></canvas>
+  </div>
+
+  <audio id="bgm" loop>
+    <source src="0-top-battle-game-bgm-264625.mp3" type="audio/mpeg" />
+  </audio>
+  <audio id="bounce" preload="auto">
+    <source src="rubberballbouncing-251948.mp3" type="audio/mpeg" />
+  </audio>
+
+  <script src="./main.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Plinko Game</title>
+  <meta charset="UTF-8" />
+  <script src="https://cdn.bootcdn.net/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: radial-gradient(#1b1c44, #0f0f25);
+      color: white;
+      text-align: center;
+      justify-content: flex-start;
+      /* alineación inicial arriba */
+      margin: 0;
+      padding: 0;
+    }
+
+    .contenidoPrincipal {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 120px;
+      /* 🔽 baja el contenido */
+      z-index: 2;
+      width: 100%;
+    }
+
+    .screen {
+      display: none;
+      padding: 30px;
+    }
+
+    .active {
+      display: block;
+    }
+
+    input,
+    select {
+      margin: 10px;
+      padding: 10px;
+      font-size: 16px;
+      width: 80%;
+      max-width: 400px;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 12px 24px;
+      font-size: 18px;
+      background-color: #ffd700;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    #can {
+      width: 800px;
+      height: 800px;
+      margin: 20px auto;
+      border: 2px solid #444;
+    }
+
+    #videoBackground {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      /* ✅ muestra todo el video sin deformarlo */
+      background-color: black;
+      /* para que no haya bordes blancos */
+      z-index: -2;
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    #instagramScreen {
+      justify-content: center;
+      align-items: center;
+      height: auto;
+      color: white;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .instagram-content {
+      background-color: rgba(0, 0, 0, 0.6);
+      padding-top: 10px;
+      padding-bottom: 20px;
+      padding-inline: 20px;
+      border-radius: 16px;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+      max-width: 400px;
+      width: 100%;
+    }
+
+    #instagramScreen h1 {
+      font-size: 28px;
+      margin-bottom: 20px;
+    }
+
+    .instagram-handle {
+      font-size: 22px;
+      font-weight: bold;
+      color: #ffd700;
+      margin-bottom: 30px;
+    }
+
+    #instagramScreen button {
+      background-color: #ffd700;
+      color: #000;
+      font-weight: bold;
+      font-size: 18px;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+
+    }
+
+    #instagramScreen button:hover {
+      background-color: #e6c200;
+    }
+
+    #premioModal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 9999;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      text-align: center;
+      color: white;
+    }
+
+
+
+
+
+
+
+
+
+    /* FORM STYLE */
+    #imagenRandomContainer {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 30px;
+      flex-wrap: wrap;
+    }
+
+    #imagenRandomContainer img {
+      width: 100%;
+      max-width: 250px;
+      height: auto;
+    }
+
+    @media (max-width: 768px) {
+      .contenidoPrincipal {
+        padding-top: 40px;
+      }
+
+      #registerForm {
+        width: 95% !important;
+        padding: 25px !important;
+      }
+
+      #registerForm input,
+      #registerForm select {
+        font-size: 18px !important;
+        width: 100% !important; 
+        padding: 14px !important;
+      }
+
+      #registerForm button {
+        font-size: 20px !important;
+        padding: 16px !important;
+      }
+
+      #formScreen h1 {
+        font-size: 28px !important;
+      }
+    }
+
+    @media (max-width: 480px) {
+      #imagenRandomContainer img {
+        max-width: 90%;
+      }
+
+      #registerForm {
+        width: 98% !important;
+        padding: 20px !important;
+      }
+
+      #registerForm input,
+      #registerForm select {
+        font-size: 18px !important;
+        width: 100% !important; 
+
+        padding: 14px !important;
+      }
+
+      #registerForm button {
+        font-size: 20px !important;
+        padding: 16px !important;
+      }
+
+      #formScreen h1 {
+        font-size: 24px !important;
+      }
+    }
+  </style>
+
+</head>
+
+<body>
+  <video autoplay muted loop id="videoBackground">
+    <source src="WhatsApp Video 2025-06-25 at 10.41.33.mp4" type="video/mp4" />
+    <!-- Podés agregar más formatos si querés compatibilidad extendida -->
+    Tu navegador no soporta el video HTML5.
+  </video>
+
+  <div class="contenidoPrincipal">
+
+    <div id="imagenRandomContainer">
+      <img id="imagenRandom" src="" alt="Imagen aleatoria" style="max-width: 25%; height: auto;" />
+    </div>
+
+    <!-- <div id="tsparticles" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;"></div> -->
+
+    <!-- Audio: música de fondo y rebote -->
+    <audio id="bgm" loop>
+      <source src="0-top-battle-game-bgm-264625.mp3" type="audio/mpeg" />
+    </audio>
+    <audio id="bounce" preload="auto">
+      <source src="rubberballbouncing-251948.mp3" type="audio/mpeg" />
+    </audio>
+
+
+    <!-- Pantalla 1: Formulario -->
+    <div id="formScreen" class="screen active" style="margin-top: 0px;">
+      <h1 style="font-size: 32px; margin-bottom: 20px;">Registrate para jugar</h1>
+      <form id="registerForm"
+        style=" margin: 0 auto; background-color: rgba(0, 0, 0, 0.5); padding: 30px; border-radius: 12px; box-shadow: 0 0 10px rgba(0,0,0,0.5);">
+
+        <input type="text" id="nombreCompleto" placeholder="Nombre Completo" required
+          style="width: 100%; padding: 12px; margin: 10px 0; border: none; border-radius: 6px; font-size: 16px;" />
+
+
+        <select id="edad" required
+          style="width: 100%; padding: 12px; margin: 10px 0; border: none; border-radius: 6px; font-size: 16px; background-color: #fff; color: #000;">
+          <option value="">Seleccioná tu rango de edad</option>
+          <option value="18-24">18-24 años</option>
+          <option value="25-34">25-34 años</option>
+          <option value="35-44">35-44 años</option>
+          <option value="45-54">45-54 años</option>
+          <option value="55+">55 años o más</option>
+        </select>
+
+        <input type="email" id="email" placeholder="Email" required
+          style="width: 100%; padding: 12px; margin: 10px 0; border: none; border-radius: 6px; font-size: 16px;" />
+
+        <input type="tel" id="telefono" placeholder="Teléfono" required
+          style="width: 100%; padding: 12px; margin: 10px 0; border: none; border-radius: 6px; font-size: 16px;" />
+
+        <input type="text" id="cp" placeholder="Código Postal" required
+          style="width: 100%; padding: 12px; margin: 10px 0; border: none; border-radius: 6px; font-size: 16px;" />
+
+        <input type="text" id="ciudad" placeholder="Ciudad" required
+          style="width: 100%; padding: 12px; margin: 10px 0; border: none; border-radius: 6px; font-size: 16px;" />
+
+        <select id="marca" required
+          style="width: 100%; padding: 12px; margin: 10px 0; border: none; border-radius: 6px; font-size: 16px; background-color: #fff; color: #000;">
+          <option value="">Seleccioná marca de fumo habitual</option>
+          <option value="18-24">Boca no tiene marido</option>
+          <option value="25-34">Boca no tiene mujer</option>
+          <option value="35-44">Pero tiene en el culo</option>
+          <option value="45-54">La pija de River Platee</option>
+        </select>
+        <button type="submit"
+          style="margin-top: 20px; width: 100%; padding: 14px; font-size: 18px; background-color: #ffd700; color: #000; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; transition: background-color 0.3s;">
+          Continuar
+        </button>
+      </form>
+    </div>
+
+
+    <!-- Pantalla 2: Instagram -->
+    <div id="instagramScreen" class="screen">
+      <div class="instagram-content">
+        <h1>¡Seguinos en Instagram!</h1>
+        <div style="margin-top: 8%;">
+          <a href="https://www.instagram.com/vankiff/" target="_blank" class="instagram-handle"
+            style="color: #ffd700; text-decoration: none; font-weight: bold; display: inline-flex; align-items: center; gap: 8px; transition: color 0.3s;">
+            @vankiff
+          </a>
+        </div>
+        <!-- <p>(Mostrá esta pantalla al staff si es presencial)</p> -->
+        <button onclick="irAlJuego()">Ya seguí</button>
+      </div>
+    </div>
+
+
+    <!-- Pantalla 3: Juego -->
+    <div id="gameScreen" class="screen">
+
+      <button onclick="dropBall()">🎲 JUGAR</button>
+      <div id="can"></div>
+      <div id="prizeOverlay"
+        style="position: absolute; width: 800px; height: 800px; top: 150px; left: 50%; transform: translateX(-50%); pointer-events: none;">
+      </div>
+    </div>
+
+    <!-- <script>
+    tsParticles.load("tsparticles", {
+      fullScreen: { enable: false },
+      background: {
+        color: { value: "#0f0f25" }
+      },
+      particles: {
+        number: { value: 400 },
+        color: { value: "#ffffff" },
+        shape: { type: "circle" },
+        opacity: { value: 0.15 },
+        size: { value: 2 },
+        move: {
+          enable: true,
+          speed: 0.6,
+          direction: "none",
+          random: true,
+          outMode: "bounce"
+        },
+      }
+    });
+  </script> -->
+
+    <script>
+
+      function mostrarPantalla(id) {
+        document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+        document.getElementById(id).classList.add("active");
+
+        const imgContainer = document.getElementById("imagenRandomContainer");
+        if (imgContainer) {
+          imgContainer.style.display = (id === "gameScreen") ? "none" : "flex";
+        }
+
+      }
+
+      const videos = [
+        "WhatsApp Video 2025-06-25 at 10.41.33.mp4",
+        "WhatsApp Video 2025-06-25 at 10.41.34.mp4",
+        "WhatsApp Video 2025-06-25 at 11.02.19.mp4",
+        "WhatsApp Video 2025-06-25 at 11.02.31.mp4",
+      ];
+
+      const imagenes = [
+        "Sobre_VK_3D_Bardi_Blossom_PNG.png",
+        "Sobre_VK_3D_Fabio_Mellow_PNG.png",
+        "Sobre_VK_3D_Fabio_Mine_PNG.png",
+        "Sobre_VK_3D_Koon_Hazel_PNG.png",
+        "Sobre_VK_3D_PengYubo_American_PNG.png",
+        "Sobre_VK_3D_PengYubo_Native_PNG.png",
+        "Sobre_VK_3D_Pyramid_Vid_PNG.png"
+      ];
+
+      window.addEventListener("DOMContentLoaded", () => {
+        const videoElement = document.getElementById("videoBackground");
+        const randomVideo = videos[Math.floor(Math.random() * videos.length)];
+
+        // Cargar la fuente de video
+        videoElement.querySelector("source").src = randomVideo;
+
+        // Recargar el elemento <video> para aplicar el nuevo src
+        videoElement.load();
+        videoElement.play().catch(e => console.log("No se pudo reproducir el video:", e));
+
+        cargarImagenAleatoria();
+      });
+
+      function cargarImagenAleatoria() {
+        const randomImg = imagenes[Math.floor(Math.random() * imagenes.length)];
+        const imgElement = document.getElementById("imagenRandom");
+        imgElement.src = randomImg;
+      }
+
+      // Mostrar imagen solo en el formulario
+
+
+      const form = document.getElementById("registerForm");
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+
+        const data = {
+          nombre: document.getElementById("nombreCompleto").value,
+          // apellido: document.getElementById("apellido").value,
+          edad: document.getElementById("edad").value,
+          email: document.getElementById("email").value,
+          telefono: document.getElementById("telefono").value,
+          cp: document.getElementById("cp").value,
+          ciudad: document.getElementById("ciudad").value,
+          marca: document.getElementById("marca").value
+        };
+
+        // Validar edad
+        if (!data.edad) {
+          alert("Debes seleccionar un rango de edad.");
+          return;
+        }
+
+        // Validar si ya jugó
+        if (localStorage.getItem("jugador_" + data.email)) {
+          alert("Ya participaste.");
+          return;
+        }
+
+        const formData = new FormData();
+        for (const key in data) {
+          formData.append(key, data[key]);
+        }
+
+        fetch("https://script.google.com/macros/s/AKfycbw0bogi10YevW79h0CC9-JL4QuYoqIRuVpVx76uQS0c_QSBd3xB0ZXvkkKhM7OGkOB_/exec", {
+          method: "POST",
+          body: formData,
+          mode: "no-cors"
+
+        })
+          .then(res => res.text())
+          .then(text => {
+            console.log("Respuesta:", text);
+            localStorage.setItem("jugador_" + data.email, "true");
+            localStorage.setItem("lastEmail", data.email); // 👈 agregado
+            mostrarPantalla("instagramScreen");
+          })
+          .catch(err => {
+            alert("Error de red.");
+            console.error(err);
+          });
+
+      });
+
+
+
+      function irAlJuego() {
+        const bgm = document.getElementById("bgm");
+        bgm.volume = 0.5; // opcional
+        bgm.play().catch(e => console.log("🔇 Error al reproducir música", e));
+
+        mostrarPantalla("gameScreen");
+        iniciarJuego();
+      }
+
+      function mostrarModalPremio(premio) {
+        const modal = document.getElementById("premioModal");
+        const texto = document.getElementById("textoPremio");
+
+        texto.textContent = `Tu premio es: ${premio}`;
+        modal.style.display = "flex";
+
+        lanzarConfetti
+        confetti({
+          particleCount: 150,
+          spread: 100,
+          origin: { y: 0.6 }
+        });
+        lanzarConfetti();
+      }
+
+      function cerrarModal() {
+        document.getElementById("premioModal").style.display = "none";
+      }
+
+      function lanzarConfetti() {
+        const canvas = document.getElementById('confettiCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const pieces = [];
+        for (let i = 0; i < 150; i++) {
+          pieces.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height - canvas.height,
+            radius: Math.random() * 6 + 4,
+            color: `hsl(${Math.random() * 360}, 100%, 50%)`,
+            speed: Math.random() * 3 + 2
+          });
+        }
+
+        function draw() {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          pieces.forEach(p => {
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+            ctx.fillStyle = p.color;
+            ctx.fill();
+            p.y += p.speed;
+          });
+          requestAnimationFrame(draw);
+        }
+
+        draw();
+      }
+
+      function iniciarJuego() {
+        const { Engine, Render, World, Bodies, Body, Events } = Matter;
+
+
+
+        const prizeZones = [];
+        const prizes = [
+          "🎉 ¡GANASTE UN AUTO!",
+          "🏖️ ¡Vacaciones gratis!",
+          "📱 ¡Un smartphone!",
+          "📱 ¡Un smartphone!",
+          "🍬 Gracias por participar",
+          "🍬 Gracias por participar",
+          "🍬 Gracias por participar",
+          "🍬 Gracias por participar",
+          "🍬 Gracias por participar",
+          "🍬 Gracias por participar",
+          "🍬 Gracias por participar",
+          "🍬 Gracias por participar",
+          "🍬 Gracias por participar",
+          "🍬 Gracias por participar",
+          "🍬 Gracias por participar",
+          "🍬 Gracias por participar",
+          "📱 ¡Un smartphone!",
+          "📱 ¡Un smartphone!",
+          "🏖️ ¡Vacaciones gratis!",
+          "🎉 ¡GANASTE UN AUTO!"
+        ];
+
+        const engine = Engine.create();
+        engine.world.gravity.y = 0.5;
+        const render = Render.create({
+          element: document.getElementById("can"),
+          engine: engine,
+          options: {
+            width: 800,
+            height: 800,
+            wireframes: false,
+            background: "transparent"
+          }
+        });
+
+        const pegOptions = { isStatic: true, render: { fillStyle: "#ffffff" } };
+        const flanges = [];
+        const rows = 16;
+        const spacingX = 40;
+        const spacingY = 40;
+        const startY = 100;
+
+        for (let row = 0; row < rows; row++) {
+          const pegsInRow = row + 3;
+          const offsetX = 400 - (pegsInRow - 1) * spacingX / 2;
+
+          for (let i = 0; i < pegsInRow; i++) {
+            const x = offsetX + i * spacingX;
+            const y = startY + row * spacingY;
+            const peg = Bodies.circle(x, y, 4, { ...pegOptions, label: "peg" });
+            Body.setAngle(peg, Math.PI / 2);
+            flanges.push(peg);
+          }
+        }
+
+        World.add(engine.world, flanges);
+
+        const walls = [
+          Bodies.rectangle(400, 800, 800, 60, { isStatic: true, render: { fillStyle: "transparent" } }),
+          Bodies.rectangle(0, 400, 10, 800, { isStatic: true, render: { fillStyle: "transparent" } }),
+          Bodies.rectangle(800, 400, 10, 800, { isStatic: true, render: { fillStyle: "transparent" } }),
+          Bodies.rectangle(400, 0, 800, 10, { isStatic: true, render: { fillStyle: "transparent" } })
+        ];
+        World.add(engine.world, walls);
+
+        const columns = rows + 1;
+        const spacingCatch = spacingX;
+        const spacingCatchPrice = spacingX;
+        const startCatchX = 400 - (columns - 1) * spacingCatch / 2;
+
+        for (let i = -1; i < columns + 1; i++) {
+          const x = startCatchX + i * spacingCatch;
+          const divider = Bodies.rectangle(x, 780, 4, 100, {
+            isStatic: true,
+            render: { fillStyle: "transparent" } // invisible
+          });
+          World.add(engine.world, divider);
+        }
+
+        for (let i = 0; i < columns; i++) {
+          const x = startCatchX + i * spacingCatch;
+          prizeZones.push(x);
+        }
+
+        function dropBall() {
+          const ball = Bodies.circle(400, 20, 15, {
+            restitution: 0.4,
+            friction: 0.0,
+            render: { fillStyle: "#00ffcc" },
+            label: "bola",
+            frictionAir: 0.0, // 👉 Esto frena un poco la caída
+          });
+          World.add(engine.world, ball);
+          checkPrize(ball);
+        }
+        window.dropBall = dropBall;
+
+        function checkPrize(ball) {
+          Events.on(engine, "afterUpdate", () => {
+            if (ball.speed < 0.5 && ball.position.y > 750 && !ball.rewarded) {
+              let closest = 0;
+              let minDist = Infinity;
+              for (let i = 0; i < prizeZones.length; i++) {
+                const dist = Math.abs(ball.position.x - prizeZones[i]);
+                if (dist < minDist) {
+                  minDist = dist;
+                  closest = i;
+                }
+              }
+
+              const result = prizes[closest];
+              mostrarModalPremio(result);
+
+              ball.rewarded = true;
+
+              const email = localStorage.getItem("lastEmail") || "sin_email";
+              const premioData = new FormData();
+              premioData.append("tipo", "resultado");
+              premioData.append("email", email);
+              premioData.append("premio", result);
+              premioData.append("casillero", closest);
+
+              fetch("https://script.google.com/macros/s/AKfycbw0bogi10YevW79h0CC9-JL4QuYoqIRuVpVx76uQS0c_QSBd3xB0ZXvkkKhM7OGkOB_/exec", {
+                method: "POST",
+                body: premioData,
+                mode: "no-cors"
+              }).then(() => console.log("🎯 Premio registrado"));
+            }
+          });
+        }
+
+        Events.on(engine, "collisionStart", (event) => {
+          const { pairs } = event;
+          // Reproduce sonido
+          const bounce = document.getElementById("bounce");
+          bounce.playbackRate = 1.5; // 1.0 = normal, 2.0 = el doble de rápido
+          bounce.currentTime = 0;
+          bounce.play().catch(e => { });
+
+
+          pairs.forEach(({ bodyA, bodyB }) => {
+            const peg = bodyA.label === "peg" ? bodyA : bodyB.label === "peg" ? bodyB : null;
+            const bola = bodyA.label === "bola" ? bodyA : bodyB.label === "bola" ? bodyB : null;
+
+            if (peg && bola) {
+              crearOndaExpansiva(peg.position.x, peg.position.y);
+
+              // Dirección aleatoria y velocidad "caótica"
+              const direccion = Math.random() < 0.5 ? -1 : 1;
+              const velocidadX = direccion * (Math.random() * 1.5); // entre -3 y 3 aprox
+              // Reemplazamos la velocidad X
+              Matter.Body.setVelocity(bola, {
+                x: velocidadX,
+                y: bola.velocity.y, // mantenemos la velocidad vertical
+              });
+
+              console.log(`💥 Lateral con velocidadX: ${velocidadX.toFixed(2)}`);
+            }
+          });
+        });
+
+        function crearOndaExpansiva(x, y) {
+          const canvas = document.querySelector("#can canvas");
+          const rect = canvas.getBoundingClientRect();
+
+          const div = document.createElement("div");
+          div.style.position = "fixed";
+          div.style.left = `${rect.left + x - 7}px`; // -5 para centrar  (ms grande mas a la izqueirda)
+          div.style.top = `${rect.top + y - 8}px`;  // mas grande ams arriba
+          div.style.width = "10px";
+          div.style.height = "10px";
+          div.style.borderRadius = "80%";
+          div.style.border = "3px solid red";
+          div.style.opacity = 1;
+          div.style.pointerEvents = "none";
+          div.style.transition = "transform 0.5s ease-out, opacity 0.5s ease-out";
+          document.body.appendChild(div);
+
+          requestAnimationFrame(() => {
+            div.style.transform = "scale(1.5)";
+            div.style.opacity = "0";
+          });
+
+          setTimeout(() => {
+            document.body.removeChild(div);
+          }, 300);
+        }
+
+        // Visual de premios
+        const prizeValues = [
+          "🎉", "💰", "📱", "🎁", "🍬", "🍬", "🍬", "🍬", "🍬", "🍬",
+          "🍬", "🍬", "🍬", "🍬", "🍬", "🍬", "📱", "🎁", "💰", "🎉"
+        ];
+        const prizeColors = [
+          "#b30000", "#e63900", "#ff6600", "#ff8533", "#ff9933", "#ffbb33", "#ffe066", "#ffff66", "#ffff66", "#ffff66",
+          "#ffff66", "#ffff66", "#ffff66", "#ffe066", "#ffbb33", "#ff9933", "#ff8533", "#ff6600", "#e63900", "#b30000"
+        ];
+
+        const overlay = document.getElementById("prizeOverlay");
+        overlay.innerHTML = "";
+
+        for (let i = 0; i < columns + 3; i++) {
+          const x = startCatchX + i * spacingCatchPrice - spacingCatchPrice / 2;
+          const prize = document.createElement("div");
+          prize.textContent = prizeValues[i];
+          prize.style.position = "absolute";
+          prize.style.left = `${x - 60}px`;
+          prize.style.top = `830px`;
+          prize.style.width = `${spacingCatch}px`;
+          prize.style.height = `30px`;
+          prize.style.lineHeight = "30px";
+          prize.style.textAlign = "center";
+          prize.style.fontSize = "22px";
+          prize.style.fontWeight = "bold";
+          prize.style.borderRadius = "6px";
+          prize.style.backgroundColor = prizeColors[i];
+          prize.style.color = "#000";
+          overlay.appendChild(prize);
+        }
+
+        Engine.run(engine);
+        Render.run(render);
+      }
+
+
+    </script>
+
+  </div>
+
+  <div id="premioModal">
+    <h1 style="font-size: 48px; color: gold;">🎉 ¡Ganaste un premio! 🎉</h1>
+    <p id="textoPremio" style="font-size: 24px; margin-top: 20px;"></p>
+    <button onclick="cerrarModal()" style="margin-top: 30px; padding: 12px 24px; font-size: 18px;">Cerrar</button>
+
+    <!-- Confetti canvas opcional si usás librería -->
+    <canvas id="confettiCanvas"
+      style="position:absolute; top:0; left:0; width:100%; height:100%;  z-index: 9999; pointer-events:none;"></canvas>
+
+
+  </div>
+
+</body>
+
+</html>

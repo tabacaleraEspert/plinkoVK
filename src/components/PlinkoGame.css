@@ -1,0 +1,18 @@
+.onda-expansiva {
+    position: fixed;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid red;
+    opacity: 1;
+    pointer-events: none;
+    transition: all 0.4s ease-out;
+    z-index: 9999;
+  }  
+  @keyframes expand {
+    to {
+      transform: translate(-50%, -50%) scale(3);
+      opacity: 0;
+    }
+  }
+  
