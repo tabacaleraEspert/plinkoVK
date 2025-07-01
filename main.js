@@ -15,6 +15,9 @@ const imagenes = [
     "/Sobre_VK_3D_Pyramid_Vid_PNG.png"
 ];
 
+document.getElementById("btnInstagram").addEventListener("click", irAlJuego);
+document.getElementById("btnCerrarModal").addEventListener("click", cerrarModal);
+document.getElementById("btnJugar").addEventListener("click", dropBall);
 window.addEventListener("DOMContentLoaded", () => {
     cargarVideoAleatorio();
     cargarImagenAleatoria();
@@ -83,11 +86,11 @@ function mostrarModalPremio(premio) {
     confetti({ particleCount: 150, spread: 100, origin: { y: 0.6 } });
 }
 
-function cerrarModal() {
+export function  cerrarModal() {
     document.getElementById("premioModal").style.display = "none";
 }
 
-function irAlJuego() {
+export function  irAlJuego() {
     const bgm = document.getElementById("bgm");
     bgm.volume = 0.5; // opcional
     bgm.play().catch(e => console.log("🔇 Error al reproducir música", e));
@@ -237,7 +240,7 @@ function iniciarJuego() {
         prizeZones.push(x);
     }
 
-    function dropBall() {
+    export function  dropBall() {
         const ball = Bodies.circle(xDropBall, yDropBall, ballRadius, {
             restitution: 0.4,
             friction: 0.0,

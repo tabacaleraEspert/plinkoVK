@@ -8,8 +8,7 @@
 
   <script src="https://cdn.bootcdn.net/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-  <link rel="stylesheet" href="./styles.css">
-
+  <link rel="stylesheet" href="./styles.css" />
 </head>
 
 <body>
@@ -19,22 +18,20 @@
   </video>
 
   <div class="contenidoPrincipal">
-
     <div id="imagenRandomContainer">
       <img id="imagenRandom" src="" alt="Imagen aleatoria" />
     </div>
 
     <!-- Formulario -->
-    <div id="formScreen" class="screen ">
+    <div id="formScreen" class="screen active">
       <h1>Registrate para jugar</h1>
       <form id="registerForm">
         <input type="text" id="nombreCompleto" placeholder="Nombre Completo" required />
-
         <input type="email" id="email" placeholder="Email" required />
         <input type="tel" id="telefono" placeholder="Teléfono" required />
         <input type="text" id="cp" placeholder="Código Postal" required />
         <input type="text" id="ciudad" placeholder="Ciudad" required />
-        <hr></hr>
+        <hr />
         <select id="edad" required>
           <option value="">Seleccioná tu rango de edad</option>
           <option value="18-24">18-24 años</option>
@@ -55,27 +52,26 @@
     </div>
 
     <!-- Instagram -->
-    <div id="instagramScreen" class="screen active">
+    <div id="instagramScreen" class="screen">
       <div class="instagram-content">
         <h1>¡Seguinos en Instagram!</h1>
         <a href="https://www.instagram.com/vankiff/" target="_blank" class="instagram-handle">@vankiff</a>
-        <button onclick="irAlJuego()">Ya seguí</button>
+        <button id="btnInstagram">Ya seguí</button>
       </div>
     </div>
 
     <!-- Juego -->
     <div id="gameScreen" class="screen">
-      <button onclick="dropBall()">🎲 JUGAR</button>
+      <button id="btnJugar">🎲 JUGAR</button>
       <div id="can"></div>
       <div id="prizeOverlay"></div>
     </div>
-
   </div>
 
   <div id="premioModal" class="modal">
     <h1>🎉 ¡Ganaste un premio! 🎉</h1>
     <p id="textoPremio"></p>
-    <button onclick="cerrarModal()">Cerrar</button>
+    <button id="btnCerrarModal">Cerrar</button>
     <canvas id="confettiCanvas"></canvas>
   </div>
 
