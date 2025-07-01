@@ -96,9 +96,6 @@ function irAlJuego() {
     iniciarJuego();
 }
 
-function cerrarModal() {
-    document.getElementById("premioModal").style.display = "none";
-}
 
 function lanzarConfetti() {
     const canvas = document.getElementById('confettiCanvas');
@@ -382,4 +379,3 @@ function iniciarJuego() {
     Render.run(render);
 }
 
-/* ⚡ Aquí incluirías el código del juego con Matter.js tal como lo tenés separado, modularizado (por espacio no se copia todo aquí) */
