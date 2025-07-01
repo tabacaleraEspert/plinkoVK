@@ -86,11 +86,11 @@ function mostrarModalPremio(premio) {
     confetti({ particleCount: 150, spread: 100, origin: { y: 0.6 } });
 }
 
-export function  cerrarModal() {
+ function  cerrarModal() {
     document.getElementById("premioModal").style.display = "none";
 }
 
-export function  irAlJuego() {
+ function  irAlJuego() {
     const bgm = document.getElementById("bgm");
     bgm.volume = 0.5; // opcional
     bgm.play().catch(e => console.log("🔇 Error al reproducir música", e));
@@ -240,7 +240,7 @@ function iniciarJuego() {
         prizeZones.push(x);
     }
 
-    export function  dropBall() {
+     function  dropBall() {
         const ball = Bodies.circle(xDropBall, yDropBall, ballRadius, {
             restitution: 0.4,
             friction: 0.0,
