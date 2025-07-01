@@ -96,22 +96,6 @@ function irAlJuego() {
     iniciarJuego();
 }
 
-function mostrarModalPremio(premio) {
-    const modal = document.getElementById("premioModal");
-    const texto = document.getElementById("textoPremio");
-
-    texto.textContent = `Tu premio es: ${premio}`;
-    modal.style.display = "flex";
-
-    lanzarConfetti
-    confetti({
-        particleCount: 150,
-        spread: 100,
-        origin: { y: 0.6 }
-    });
-    lanzarConfetti();
-}
-
 function cerrarModal() {
     document.getElementById("premioModal").style.display = "none";
 }
