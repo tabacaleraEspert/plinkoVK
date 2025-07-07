@@ -234,11 +234,16 @@
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         ///////////// LIMITES
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        const xInferiorWall = currentWidth/2 ///Mitad de pantalla deberia ser
-        const yInferiorWall = 500   ///PENSAR COMO PINGO HACER
-        const widthInferiorWall = 1000
-        const heightInferiorWall = 10
-
+        const xInferiorWall = currentWidth / 2; 
+        const widthInferiorWall = currentWidth;
+        const heightInferiorWall = 10;
+        
+        const topOverlay = 580;
+        const alturaPremio = 30;
+        const margenExtra = 10;
+        
+        const yInferiorWall = topOverlay + alturaPremio + margenExtra;
+        
         const xLeftWall =  200 ///Mitad de pantalla deberia ser
         const yLeftWall = 400   ///PENSAR COMO PINGO HACER
         const widthLeftWall = 10
@@ -259,12 +264,12 @@
         const walls = [
             Bodies.rectangle(
                 xInferiorWall,
-                screenHeight/2,
+                yInferiorWall,
                 widthInferiorWall,
                 heightInferiorWall,
-                { 
-                    isStatic: true,
-                    render: { fillStyle: "#FF0000" } // 🔴 Rojo
+                {
+                  isStatic: true,
+                  render: { fillStyle: "#FF0000" }
                 }
             ),
             Bodies.rectangle(
