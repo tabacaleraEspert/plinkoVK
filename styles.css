@@ -6,6 +6,21 @@ body {
   color: white;
   background: radial-gradient(#1b1c44, #0f0f25);
   text-align: center;
+  overflow: hidden;
+}
+
+#prizeOverlayContainer {
+  position: absolute;
+  width: 100%;
+  top: 580px; /* Ajusta la altura según tu juego */
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+}
+
+#prizeOverlay {
+  position: relative;
+  display: flex;
 }
 
 .contenidoPrincipal {
@@ -154,11 +169,15 @@ body {
   /* 1) Oculta siempre los screens que no estén activos */
   .screen {
     display: none !important;
+    overflow: hidden;
+
   }
 
   .screen.active {
     display: flex !important;
     flex-direction: column;
+    overflow: hidden;
+
     align-items: center;
   }
 
@@ -184,6 +203,8 @@ body {
 
   /* Opcional: reducir opacidad/video si molesta */
   #videoBackground {
+    overflow: hidden;
+
     opacity: 0.3;
   }
 
@@ -214,6 +235,8 @@ body {
   #formScreen h1 {
     font-size: 22px;
     margin-bottom: 16px;
+    overflow: hidden;
+
   }
 
   .instagram-content {
