@@ -312,11 +312,6 @@ function iniciarJuego() {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ///////////// PREMIOS
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    const columns = rows + 1;
-    const spacingCatch = spacingX;
-    const spacingCatchPrice = spacingX;
-    const startCatchX = xPricesStart - (columns - 1) * spacingCatch / 2;
-
     const prizeValues = [
         "🧥",
         "👕",
@@ -340,57 +335,69 @@ function iniciarJuego() {
         "#ffe066", "#ffbb33", "#ff9933", "#ff8533", "#ff6600", "#e63900", "#b30000"
     ];
 
-    const overlay = document.getElementById("prizeOverlay");
-    overlay.innerHTML = "";
-
+    const columns = rows + 1;
+    const spacingCatch = spacingX;
+    const spacingCatchPrice = spacingX;
+    const startCatchX = xPricesStart - (columns - 1) * spacingCatch / 2;
+    const spacingPremio = spacingX + 3;
+    const anchoTotalPremios = columns * spacingPremio;
+    const centerCanvas = currentWidth/4;
+    const startPremioX = centerCanvas - (anchoTotalPremios / 2) +xLeftWall;
     const totalPremios = prizeValues.length;
     const anchoMax = 0.9 * window.innerWidth; // 90% de la pantalla
     const anchoPorPremio = Math.min(50, Math.floor(anchoMax / totalPremios) - 4); // 4px margen
-    const anchoTotalPremios = (anchoPorPremio + 4) * totalPremios;
+    // const anchoTotalPremios = (anchoPorPremio + 4) * totalPremios;
 
+    const overlay = document.getElementById("prizeOverlay");
     overlay.innerHTML = "";
-    for (let i = 0; i < totalPremios; i++) {
+
+    for (let i = 0; i < columns; i++) {
         const prize = document.createElement("div");
-        prize.textContent = prizeValues[i];
-        prize.style.width = `${anchoPorPremio}px`;
+        prize.textContent = prizeValues[i % prizeValues.length];
+        prize.style.width = `${spacingPremio}px`;
         prize.style.height = "30px";
         prize.style.lineHeight = "30px";
         prize.style.textAlign = "center";
         prize.style.fontSize = "18px";
         prize.style.fontWeight = "bold";
         prize.style.borderRadius = "6px";
-        prize.style.backgroundColor = prizeColors[i] || "#fff";
+        prize.style.backgroundColor = prizeColors[i % prizeColors.length];
         prize.style.color = "#000";
-        prize.style.margin = "0 2px";
+        prize.style.margin = "0px";
         overlay.appendChild(prize);
     }
 
+
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ///////////// CASILLAS DE PREMIOS
+    ///////////// DIVS DE PREMIOS
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    const yUltimaFila = startY 
+    const overlayTop = 0 
 
     const startX = (window.innerWidth - (totalPremios * (anchoPorPremio + 4))) / 2;
     overlay.style.display = "flex";
     overlay.style.justifyContent = "center";
     overlay.style.position = "absolute";
     overlay.style.left = `${startX}px`;
-    overlay.style.top = `580px`;
+    overlay.style.top = `${overlayTop}px`;
     overlay.style.width = `${anchoTotalPremios}px`;
 
-    // Divisores (1 menos que premios)
-    for (let i = 0; i < totalPremios - 1; i++) {
-        const xDiv = startX + (anchoPorPremio + 4) * (i + 1);
+    for (let i = 0; i <= columns; i++) {
+        const xDiv = (startPremioX + i * spacingPremio );
         const divider = Bodies.rectangle(xDiv, yPricesDividers, 4, 100, {
             isStatic: true,
             render: { fillStyle: "white" }
         });
         World.add(engine.world, divider);
+        prizeZones.push(startPremioX + i * spacingPremio - spacingPremio / 2);
     }
+
+
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ///////////// PELOTA
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
