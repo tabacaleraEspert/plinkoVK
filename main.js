@@ -388,8 +388,8 @@ function iniciarJuego() {
     overlay.style.width = `${anchoTotalPremios}px`;
 
     for (let i = 0; i <= columns; i++) {
-        const xDiv = (startPremioX + i * spacingPremio );
-        const divider = Bodies.rectangle(xDiv, yPricesDividers, 4, 100, {
+        const xDiv = (startPremioX + i * spacingPremio )+ 100;
+        const divider = Bodies.rectangle(xDiv+25, yPricesDividers, 4, 100, {
             isStatic: true,
             render: { fillStyle: "white" }
         });
@@ -403,7 +403,7 @@ function iniciarJuego() {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     const ballRadius = 6
     const xDropBall = currentWidth / 2
-    const yDropBall = 100
+    const yDropBall = 200
 
     function dropBall() {
         const ball = Bodies.circle(xDropBall, yDropBall, ballRadius, {
