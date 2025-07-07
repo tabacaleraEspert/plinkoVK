@@ -17,7 +17,6 @@
 
     document.getElementById("btnInstagram").addEventListener("click", irAlJuego);
     document.getElementById("btnCerrarModal").addEventListener("click", cerrarModal);
-    // document.getElementById("btnJugar").addEventListener("click", dropBall);
     window.addEventListener("DOMContentLoaded", () => {
         cargarVideoAleatorio();
         cargarImagenAleatoria();
@@ -134,6 +133,8 @@
     }
 
     function iniciarJuego() {
+        document.getElementById("btnJugar").addEventListener("click", dropBall);
+
         const { Engine, Render, World, Bodies, Body, Events } = Matter;
 
 
@@ -197,9 +198,9 @@
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        
-
-
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////// PALITOS DE LA PIRAMIEDE
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         const pegOptions = { isStatic: true, render: { fillStyle: "#ffffff" } };
         const flanges = [];
         const rows = 15;
@@ -210,13 +211,8 @@
         const xPricesStart = 330
         const yPricesStart = 220
         const xPricesDividers = 315 
-        const yPricesDividers = 550 
-
-
-
-
-
-        // PALITOS
+        const yPricesDividers = 550
+         
         for (let row = 0; row < rows; row++) {
             const pegsInRow = row + 3;
             const offsetX = 400 - (pegsInRow - 1) * spacingX / 2;
@@ -230,8 +226,14 @@
             }
         }
         World.add(engine.world, flanges);
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        //////////////////////////////////////////////// LIMITES
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////// LIMITES
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         const xInferiorWall = currentWidth/2 ///Mitad de pantalla deberia ser
         const yInferiorWall = 500   ///PENSAR COMO PINGO HACER
         const widthInferiorWall = 1000
@@ -298,36 +300,91 @@
         ];
         
         World.add(engine.world, walls);
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        /////////////////////// PREMIOS
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////// PREMIOS
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         const columns = rows + 1;
         const spacingCatch = spacingX;
         const spacingCatchPrice = spacingX;
         const startCatchX = xPricesStart - (columns - 1) * spacingCatch / 2;
 
+        const prizeValues = [
+            "🧥",
+            "👕",
+            "🧢",
+            "🧣",
+            "🕶️",
+            "🍺",
+            "🔑",
+            "🍂",
+            "🔑",
+            "🍺",
+            "🕶️",
+            "🧣",
+            "🧢",
+            "👕",
+            "🧥"
+          ];
+          
+        const prizeColors = [
+            "#b30000", "#e63900", "#ff6600", "#ff8533", "#ff9933", "#ffbb33", "#ffe066", "#ffff66",
+          "#ffe066", "#ffbb33", "#ff9933", "#ff8533", "#ff6600", "#e63900", "#b30000"
+        ];
 
-
-
-        //////////////////////// DIVISORES DE PREMIOS
-        for (let i = -1; i < columns + 1; i++) {
-            const x = xPricesDividers + i * spacingCatch;
-            const divider = Bodies.rectangle(x, yPricesDividers, 4, 100, {
-                isStatic: true,
-                // render: { fillStyle: "transparent" } // invisible
-            });
-            World.add(engine.world, divider);
+        const overlay = document.getElementById("prizeOverlay");
+        overlay.innerHTML = "";
+        
+        const totalPremios = prizeValues.length;
+        const anchoMax = 0.9 * window.innerWidth; // 90% de la pantalla
+        const anchoPorPremio = Math.min(50, Math.floor(anchoMax / totalPremios) - 4); // 4px margen
+        
+        for (let i = 0; i < totalPremios; i++) {
+          const prize = document.createElement("div");
+          prize.textContent = prizeValues[i];
+          prize.style.width = `${anchoPorPremio}px`;
+          prize.style.height = "30px";
+          prize.style.lineHeight = "30px";
+          prize.style.textAlign = "center";
+          prize.style.fontSize = "18px";
+          prize.style.fontWeight = "bold";
+          prize.style.borderRadius = "6px";
+          prize.style.backgroundColor = prizeColors[i] || "#fff";
+          prize.style.color = "#000";
+          prize.style.margin = "0 2px";
+          overlay.appendChild(prize);
         }
+        
+        
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-        for (let i = 0; i < columns; i++) {
-            const x = xPricesStart + i * spacingCatch;
-            prizeZones.push(x);
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////// CASILLAS DE PREMIOS
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+        const startX = (window.innerWidth - (totalPremios * (anchoPorPremio + 4))) / 2;
+        
+        // Divider exacto entre premios
+        for (let i = 0; i <= totalPremios; i++) {
+          const x = startX + i * (anchoPorPremio + 4);
+          const divider = Bodies.rectangle(x, yPricesDividers, 4, 100, {
+            isStatic: true,
+            render: { fillStyle: "#000" } // visible para testear
+          });
+          World.add(engine.world, divider);
         }
+        
 
 
-
-
-        /////////////////////// PELOTA
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////// PELOTA
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         const ballRadius = 6
         const xDropBall =  currentWidth/2 
         const yDropBall = 100 
@@ -343,7 +400,7 @@
             World.add(engine.world, ball);
             checkPrize(ball);
         }
-        window.dropBall = dropBall();
+        window.dropBall = dropBall;
 
 
 
@@ -448,51 +505,7 @@
             }, 300);
         }
 
-        const prizeValues = [
-            "🧥",
-            "👕",
-            "🧢",
-            "🧣",
-            "🕶️",
-            "🔑",
-            "🍂",
-            "🔑",
-            "🍺",
-            "🧣",
-            "🧢",
-            "👕",
-            "🧥"
-          ];
-          
-        const prizeColors = [
-            "#b30000", "#e63900", "#ff6600", "#ff8533", "#ff9933", "#ffbb33", "#ffe066", "#ffff66", "#ffff66", "#ffff66",
-            "#ffff66", "#ffff66", "#ffff66", "#ffe066", "#ffbb33", "#ff9933", "#ff8533", "#ff6600", "#e63900", "#b30000"
-        ];
 
-        const overlay = document.getElementById("prizeOverlay");
-        overlay.innerHTML = "";
-        
-        const totalPremios = prizeValues.length;
-        const anchoMax = 0.9 * window.innerWidth; // 90% de la pantalla
-        const anchoPorPremio = Math.min(50, Math.floor(anchoMax / totalPremios) - 4); // 4px margen
-        
-        for (let i = 0; i < totalPremios; i++) {
-          const prize = document.createElement("div");
-          prize.textContent = prizeValues[i];
-          prize.style.width = `${anchoPorPremio}px`;
-          prize.style.height = "30px";
-          prize.style.lineHeight = "30px";
-          prize.style.textAlign = "center";
-          prize.style.fontSize = "18px";
-          prize.style.fontWeight = "bold";
-          prize.style.borderRadius = "6px";
-          prize.style.backgroundColor = prizeColors[i] || "#fff";
-          prize.style.color = "#000";
-          prize.style.margin = "0 2px";
-          overlay.appendChild(prize);
-        }
-        
-        
 
         Engine.run(engine);
         Render.run(render);
