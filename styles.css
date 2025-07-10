@@ -8,20 +8,30 @@ body {
   text-align: center;
   overflow: hidden;
 }
-
-#prizeOverlayContainer {
-  position: absolute;
+  #videoBackground {
+    pointer-events: none;
+  }
+/* 
+#gameWrapper {
+  position: relative;
   width: 100%;
-  top: 580px; /* Ajusta la altura según tu juego */
-  display: flex;
-  justify-content: center;
-  pointer-events: none;
+  max-width: 800px; 
+  margin: 0 auto;
+  overflow: hidden;
+} */
+
+#can {
+  width: 100%;
 }
 
 #prizeOverlay {
-  position: relative;
+  position: absolute;
+  bottom: 0;
   display: flex;
+  justify-content: center;
+  width: 100%;
 }
+
 
 .contenidoPrincipal {
   display: flex;

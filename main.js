@@ -1,3 +1,35 @@
+const url = "https://script.google.com/macros/s/AKfycbwhNxXnohfBpcYPh9MHWdbhOujHfSHQ-yyGmoxGwCCSM_ejJD8JaTrDfyAUP8_WMrPo/exec"
+
+document.getElementById("btnInstagram").addEventListener("click", async () => {
+    try {
+        // 🔥 Llamada al App Script
+        const res = await fetch("https://script.google.com/macros/s/AKfycbwhNxXnohfBpcYPh9MHWdbhOujHfSHQ-yyGmoxGwCCSM_ejJD8JaTrDfyAUP8_WMrPo/exec");
+        const data = await res.json();
+
+        if (data.error) {
+            alert("No hay premios disponibles");
+            return;
+        }
+
+        // Guardás el emoji y nombre
+        const premioNombre = data.Premio;
+        
+
+        console.log("Premio elegido:", premioNombre);
+
+        // ✅ Guardar en variable global (si querés mostrarlo luego)
+        window.premioElegido = premioNombre;
+        
+
+        // Ahora sí: soltar la bola
+        // dropBall();
+
+    } catch (error) {
+        console.error("Error al obtener premio:", error);
+        alert("Error al conectar con la base de premios");
+    }
+});
+
 const videos = [
     "/WhatsApp Video 2025-06-25 at 10.41.33.mp4",
     "/WhatsApp Video 2025-06-25 at 10.41.34.mp4",
@@ -77,7 +109,6 @@ function mostrarPantalla(id) {
     document.getElementById("imagenRandomContainer").style.display = (id === "gameScreen") ? "none" : "flex";
 }
 
-
 function mostrarModalPremio(premio) {
     const modal = document.getElementById("premioModal");
     document.getElementById("textoPremio").textContent = `Tu premio es: ${premio}`;
@@ -98,7 +129,6 @@ function irAlJuego() {
     mostrarPantalla("gameScreen");
     iniciarJuego();
 }
-
 
 function lanzarConfetti() {
     const canvas = document.getElementById('confettiCanvas');
@@ -139,32 +169,18 @@ function iniciarJuego() {
 
 
     const prizeZones = [];
-    // Creamos la lista de 100 premios
-    const allPrizes = [];
-    allPrizes.push(...Array(2).fill("🧥 Buzo"));
-    allPrizes.push(...Array(3).fill("👕 Remera"));
-    allPrizes.push(...Array(5).fill("🧢 Gorra"));
-    allPrizes.push(...Array(10).fill("🧣 Cuello"));
-    allPrizes.push(...Array(5).fill("🍻 Cerveza"));
-    allPrizes.push(...Array(5).fill("🥽 Funda antiparra"));
-    allPrizes.push(...Array(30).fill("🔑 Llavero"));
-    allPrizes.push(...Array(40).fill("🌿 Tabaco Van Kiff"));
-
-    // Mezclamos para que no queden agrupados
-    const shuffledPrizes = allPrizes.sort(() => Math.random() - 0.5);
-
-    // Tomamos los primeros 20 para los slots
-    const prizes = shuffledPrizes.slice(0, 20);
 
     const engine = Engine.create();
     engine.world.gravity.y = 0.2;
+    const currentWidth =  window.innerWidth;
+    const currentHeight =  window.innerHeight;
 
     const render = Render.create({
         element: document.getElementById("can"),
         engine: engine,
         options: {
-            width: 800,
-            height: 800,
+            width: currentWidth,
+            height: currentHeight,
             wireframes: false,
             background: "transparent"
         }
@@ -173,53 +189,27 @@ function iniciarJuego() {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ///////////// X ESCALAR SEGUN WIDTH
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    const baseWidth = 800;
-    const screenWidth = window.innerWidth;
-    const screenHeight = window.innerHeight;
-
-    const currentWidth = window.innerWidth; // o el width de tu canvas
-    console.log(currentWidth)
-    const scaleFactor = currentWidth / baseWidth;
-    // const pegOptions = { isStatic: true, render: { fillStyle: "#ffffff" } };
-    // const flanges = [];
-    // const rows = 15;
-    // const spacingX = 20 * scaleFactor;
-    // const spacingY = 20 * scaleFactor;
-    // const startY = 200 * scaleFactor;
-    // const pegRadius = 1.2 * scaleFactor;
-    // const ballRadius = 6 * scaleFactor;
-    // const xDropBall = 450 * scaleFactor;
-    // const yDropBall = 100 * scaleFactor;
-    // const xPricesStart = 330 * scaleFactor;
-    // const yPricesStart = 220 * scaleFactor;
-    // const xPricesDividers = 315 * scaleFactor;
-    // const yPricesDividers = 550 * scaleFactor;
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    console.log("current width: ", currentWidth)
+    console.log("current height: ", currentHeight)    
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ///////////// PALITOS DE LA PIRAMIEDE
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     const pegOptions = { isStatic: true, render: { fillStyle: "#ffffff" } };
     const flanges = [];
-    const rows = 15;
+    const rows = 14;
     const spacingX = 20
     const spacingY = 20
-    const startY = 200
-    const pegRadius = 1.2
-    const xPricesStart = 330
-    const yPricesStart = 220
-    const xPricesDividers = 315
-    const yPricesDividers = 550
-
+    const startY = currentHeight*.3
+    const pegRadius = 3
+    
     for (let row = 0; row < rows; row++) {
         const pegsInRow = row + 3;
-        const offsetX = 400 - (pegsInRow - 1) * spacingX / 2;
+        const offsetX = (currentWidth/2) - (pegsInRow - 1) * spacingX / 2;
 
         for (let i = 0; i < pegsInRow; i++) {
             const x = offsetX + i * spacingX;
-            const y = startY + row * spacingY;
+            const y = startY + row * spacingY; //50 por el price height + margen
             const peg = Bodies.circle(x, y, pegRadius, { ...pegOptions, label: "peg" });
             Body.setAngle(peg, Math.PI / 2);
             flanges.push(peg);
@@ -234,31 +224,29 @@ function iniciarJuego() {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ///////////// LIMITES
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    const xInferiorWall = currentWidth / 2;
+    const margenEntrePirámideYPremios = spacingY*1.5;
+    let yUltimaFila = startY + (rows + 1 ) * spacingY;
+    const overlayTop = yUltimaFila + margenEntrePirámideYPremios;
+    const overlay = document.getElementById("prizeOverlay");
+
+    const xInferiorWall = currentWidth/2;
     const widthInferiorWall = currentWidth;
     const heightInferiorWall = 10;
 
     const topOverlay = 580;
     const alturaPremio = 30;
     const margenExtra = 10;
+    const yInferiorWall = overlayTop;
 
-    const yInferiorWall = topOverlay + alturaPremio + margenExtra;
-
-    const xLeftWall = 200 ///Mitad de pantalla deberia ser
-    const yLeftWall = 400   ///PENSAR COMO PINGO HACER
+    const xLeftWall = 0 ///Mitad de pantalla deberia ser
+    const yLeftWall = currentHeight / 2   ///PENSAR COMO PINGO HACER
     const widthLeftWall = 10
-    const heightLeftWall = 1000
-    console.log(currentWidth)
+    const heightLeftWall = currentHeight
 
-    const xRightWall = 600 ///Mitad de pantalla deberia ser
-    const yRightWall = 400   ///PENSAR COMO PINGO HACER
     const widthRightWall = 10
-    const heightRightWall = 1000
-
-    const xBottomWall = 200 ///Mitad de pantalla deberia ser
-    const yBottomWall = 400   ///PENSAR COMO PINGO HACER
-    const widthBottomWall = 10
-    const heightBottomWall = 1000
+    const xRightWall = currentWidth - (widthRightWall / 2); ///Mitad de pantalla deberia ser
+    const yRightWall = currentHeight/2     ///PENSAR COMO PINGO HACER
+    const heightRightWall = currentHeight
 
 
     const walls = [
@@ -269,6 +257,7 @@ function iniciarJuego() {
             heightInferiorWall,
             {
                 isStatic: true,
+                label: "inferiorWall",
                 render: { fillStyle: "#FF0000" }
             }
         ),
@@ -292,16 +281,7 @@ function iniciarJuego() {
                 render: { fillStyle: "#0000FF" } // 🔵 Azul
             }
         ),
-        Bodies.rectangle(
-            xBottomWall,
-            yBottomWall,
-            widthBottomWall,
-            heightBottomWall,
-            {
-                isStatic: true,
-                render: { fillStyle: "#FFFF00" } // 🟡 Amarillo
-            }
-        )
+
     ];
 
     World.add(engine.world, walls);
@@ -312,50 +292,57 @@ function iniciarJuego() {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ///////////// PREMIOS
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     const prizeValues = [
-        "🧥",
-        "👕",
-        "🧢",
-        "🧣",
-        "🕶️",
-        "🍺",
-        "🔑",
-        "🍂",
-        "🔑",
-        "🍺",
-        "🕶️",
-        "🧣",
-        "🧢",
-        "👕",
-        "🧥"
+        "👕", "🍺",
+        "🧣", "🍂", "🔑",
+        "🕶️", "🧢", "🧥"
     ];
 
     const prizeColors = [
-        "#b30000", "#e63900", "#ff6600", "#ff8533", "#ff9933", "#ffbb33", "#ffe066", "#ffff66",
-        "#ffe066", "#ffbb33", "#ff9933", "#ff8533", "#ff6600", "#e63900", "#b30000"
+        "#b30000", // oscuro (extremo izquierdo)
+        "#e63900", // intermedio
+        "#ff8533", // claro medio
+        "#ffe066", // muy claro centro
+        "#ffe066", // muy claro centro
+        "#ff8533", // claro medio
+        "#e63900", // intermedio
+        "#b30000"  // oscuro (extremo derecho)
     ];
 
     const columns = rows + 1;
-    const spacingCatch = spacingX;
-    const spacingCatchPrice = spacingX;
-    const startCatchX = xPricesStart - (columns - 1) * spacingCatch / 2;
-    const spacingPremio = spacingX + 3;
-    const anchoTotalPremios = columns * spacingPremio;
-    const centerCanvas = currentWidth/4;
-    const startPremioX = centerCanvas - (anchoTotalPremios / 2) +xLeftWall;
-    const totalPremios = prizeValues.length;
-    const anchoMax = 0.9 * window.innerWidth; // 90% de la pantalla
-    const anchoPorPremio = Math.min(50, Math.floor(anchoMax / totalPremios) - 4); // 4px margen
-    // const anchoTotalPremios = (anchoPorPremio + 4) * totalPremios;
+    const spacingPremio = currentWidth / prizeValues.length;  // Cada premio ocupa el mismo ancho proporcional
 
-    const overlay = document.getElementById("prizeOverlay");
+    // 💥 Calcular ancho total y posición inicial
+    const anchoTotalPremios = prizeValues.length * spacingPremio;
+    const startPremioX = 0
+    const heightDiv = 30
+
+    const yStartDivs = yUltimaFila + margenEntrePirámideYPremios + spacingY/2;
+    
     overlay.innerHTML = "";
 
-    for (let i = 0; i < columns; i++) {
+    // 🟢 Estilos de overlay
+    overlay.style.display = "flex";
+    overlay.style.justifyContent = "center";
+    overlay.style.position = "absolute";
+    overlay.style.left = `${startPremioX}px`;
+    overlay.style.top = `${yStartDivs}px`;
+    overlay.style.width = `${anchoTotalPremios}px`;
+    // PREV a GPT
+    // overlay.style.left = `${startX}px`;
+    // overlay.style.top = `${overlayTop}px`;
+    // overlay.style.width = `${anchoTotalPremios}px`;
+
+    // 🟠 Vaciar prizeZones
+    prizeZones.length = 0;
+
+    // 🔥 Agregar premios al overlay y calcular prizeZones
+    for (let i = 0; i < prizeValues.length; i++) {
         const prize = document.createElement("div");
         prize.textContent = prizeValues[i % prizeValues.length];
         prize.style.width = `${spacingPremio}px`;
-        prize.style.height = "30px";
+        prize.style.height =  `${heightDiv}px`;
         prize.style.lineHeight = "30px";
         prize.style.textAlign = "center";
         prize.style.fontSize = "18px";
@@ -365,45 +352,41 @@ function iniciarJuego() {
         prize.style.color = "#000";
         prize.style.margin = "0px";
         overlay.appendChild(prize);
+
+        const centerX = startPremioX + i * spacingPremio + spacingPremio / 2;
+        prizeZones.push(centerX);
     }
 
 
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
+    
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ///////////// DIVS DE PREMIOS
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    const yUltimaFila = startY 
-    const overlayTop = 0 
 
-    const startX = (window.innerWidth - (totalPremios * (anchoPorPremio + 4))) / 2;
-    overlay.style.display = "flex";
-    overlay.style.justifyContent = "center";
-    overlay.style.position = "absolute";
-    overlay.style.left = `${startX}px`;
-    overlay.style.top = `${overlayTop}px`;
-    overlay.style.width = `${anchoTotalPremios}px`;
-
-    for (let i = 0; i <= columns; i++) {
-        const xDiv = (startPremioX + i * spacingPremio )+ 100;
-        const divider = Bodies.rectangle(xDiv+25, yPricesDividers, 4, 100, {
+    const startOfDivisores = startY + rows * spacingY + heightDiv/2
+    for (let i = 0; i <= prizeValues.length; i++) {
+        // const xDiv = startPremioX+30 + i * (spacingPremio+30);
+        const xDiv = startPremioX + i * (spacingPremio);
+        const divider = Bodies.rectangle(xDiv,   startOfDivisores, 2, 20, {
             isStatic: true,
             render: { fillStyle: "white" }
         });
         World.add(engine.world, divider);
-        prizeZones.push(startPremioX + i * spacingPremio - spacingPremio / 2);
     }
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
 
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ///////////// PELOTA
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     const ballRadius = 6
-    const xDropBall = currentWidth / 2
-    const yDropBall = 200
+    const xDropBall = currentWidth/2
+    const yDropBall = startY*0.85
 
     function dropBall() {
         const ball = Bodies.circle(xDropBall, yDropBall, ballRadius, {
@@ -414,7 +397,7 @@ function iniciarJuego() {
             frictionAir: 0.0, // 👉 Esto frena un poco la caída
         });
         World.add(engine.world, ball);
-        checkPrize(ball);
+        // checkPrize(ball);
     }
     window.dropBall = dropBall;
 
@@ -423,31 +406,34 @@ function iniciarJuego() {
 
 
 
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////// COLISIONES
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    Events.on(engine, "collisionStart", (event) => {
+        const { pairs } = event;
 
+        pairs.forEach(({ bodyA, bodyB }) => {
+            const bola = bodyA.label === "bola" ? bodyA : bodyB.label === "bola" ? bodyB : null;
+            const paredInferior = bodyA.label === "inferiorWall" ? bodyA : bodyB.label === "inferiorWall" ? bodyB : null;
 
+            if (bola && paredInferior && !bola.rewarded) {
+                bola.rewarded = true; // Para evitar repetir
 
-
-
-
-
-    function checkPrize(ball) {
-        Events.on(engine, "afterUpdate", () => {
-            if (ball.speed < 0.5 && ball.position.y > 750 && !ball.rewarded) {
+                // Buscar el casillero más cercano
                 let closest = 0;
                 let minDist = Infinity;
                 for (let i = 0; i < prizeZones.length; i++) {
-                    const dist = Math.abs(ball.position.x - prizeZones[i]);
+                    const dist = Math.abs(bola.position.x - prizeZones[i]);
                     if (dist < minDist) {
                         minDist = dist;
                         closest = i;
                     }
                 }
 
-                const result = prizes[closest];
+                const result = prizeValues[closest];
                 mostrarModalPremio(result);
 
-                ball.rewarded = true;
-
+                // Registrar en backend
                 const email = localStorage.getItem("lastEmail") || "sin_email";
                 const premioData = new FormData();
                 premioData.append("tipo", "resultado");
@@ -462,7 +448,42 @@ function iniciarJuego() {
                 }).then(() => console.log("🎯 Premio registrado"));
             }
         });
-    }
+    });
+    const listaVelocidades = [
+        { x: -0.9884, y: 1.8889 },
+        { x: -0.8705, y: 0.7742 },
+        { x: 1.4959, y: 1.3131 },
+        { x: -0.8421, y: 0.6060 },
+        { x: -0.5608, y: 0.8838 },
+        { x: -0.2574, y: 1.4466 },
+        { x: 0.0618, y: 0.1894 },
+        { x: 0.6238, y: 1.5000 },
+        { x: 0.6544, y: 1.1551 },
+        { x: -0.0970, y: 1.4568 },
+        { x: -0.3388, y: 0.8822 },
+        { x: -0.0726, y: 1.4865 },
+        { x: -0.3131, y: 0.9677 },
+        { x: -0.8029, y: 1.4354 },
+        { x: -1.0257, y: 0.7112 },
+        { x: 1.2915, y: 1.3522 },
+        { x: 0.5433, y: 0.7560 },
+        { x: -0.9382, y: 1.3802 },
+        { x: 1.1953, y: 1.0772 },
+        { x: 1.3582, y: 1.2438 },
+        { x: -0.5207, y: 1.8116 },
+        { x: -0.4647, y: 1.4407 },
+        { x: 0.9663, y: 0.9815 },
+        { x: 0.4743, y: 1.6098 },
+        { x: -0.8656, y: 1.0972 },
+        { x: -0.7635, y: 1.2638 },
+        { x: 1.3128, y: 1.6397 },
+        { x: -1.0844, y: 1.1374 },
+        { x: 0.9596, y: 1.5808 },
+        { x: -0.5778, y: 0.4005 },
+        { x: -1.4195, y: 0.5672 },
+        { x: -0.4604, y: 0.8449 }
+      ];
+      let reboteIndex = 0;
 
     Events.on(engine, "collisionStart", (event) => {
         const { pairs } = event;
@@ -480,16 +501,29 @@ function iniciarJuego() {
             if (peg && bola) {
                 crearOndaExpansiva(peg.position.x, peg.position.y);
 
-                // Dirección aleatoria y velocidad "caótica"
-                const direccion = Math.random() < 0.5 ? -1 : 1;
-                const velocidadX = direccion * (Math.random() * 1.5); // entre -3 y 3 aprox
-                // Reemplazamos la velocidad X
-                Matter.Body.setVelocity(bola, {
-                    x: velocidadX,
-                    y: bola.velocity.y, // mantenemos la velocidad vertical
-                });
+                // // // Dirección aleatoria y velocidad "caótica"
+                // const direccion = Math.random() < 0.5 ? -1 : 1;
+                // const velocidadX = direccion * (Math.random() * 1.5); // entre -3 y 3 aprox
+                // // Reemplazamos la velocidad X
+                // Matter.Body.setVelocity(bola, {
+                //     x: velocidadX,
+                //     y: bola.velocity.y, // mantenemos la velocidad vertical
+                // });
+                // console.log(`💥 velocidadX: ${velocidadX.toFixed(4)}`);
+                // console.log(`💥 velocidadY: ${ bola.velocity.y}`);
 
-                console.log(`💥 Lateral con velocidadX: ${velocidadX.toFixed(2)}`);
+                if (reboteIndex > 1 && reboteIndex < listaVelocidades.length) {
+                    const velocidad = listaVelocidades[reboteIndex];
+            
+                    // Asignar la velocidad definida
+                    Matter.Body.setVelocity(bola, {
+                      x: velocidad.x,
+                      y: bola.velocity.y + velocidad.y // opcional: sumar al Y
+                    });
+            
+                    reboteIndex++; // Pasar al siguiente rebote
+                  }
+
             }
         });
     });

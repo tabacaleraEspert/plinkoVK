@@ -12,10 +12,10 @@
 </head>
 
 <body>
-  <video autoplay muted loop id="videoBackground">
+  <!-- <video autoplay muted loop id="videoBackground">
     <source src="" type="video/mp4" />
     Tu navegador no soporta el video HTML5.
-  </video>
+  </video> -->
 
   <div class="contenidoPrincipal">
     <div id="imagenRandomContainer">
@@ -42,11 +42,35 @@
         </select>
         <select id="marca" required>
           <option value="">Seleccioná marca de fumo habitual</option>
-          <option value="Boca no tiene marido">Boca no tiene marido</option>
-          <option value="Boca no tiene mujer">Boca no tiene mujer</option>
-          <option value="Pero tiene en el culo">Pero tiene en el culo</option>
-          <option value="La pija de River Plate">La pija de River Plate</option>
+          <option value="MARLBORO RED">MARLBORO RED</option>
+          <option value="MARLBORO GOLD">MARLBORO GOLD</option>
+          <option value="MARLBORO VISTA">MARLBORO VISTA</option>
+          <option value="PHILIP MORRIS">PHILIP MORRIS</option>
+          <option value="PHILIP MORRIS CAPS">PHILIP MORRIS CAPS</option>
+          <option value="MARLBORO CRAFTED">MARLBORO CRAFTED</option>
+          <option value="LUCKY STRIKE">LUCKY STRIKE</option>
+          <option value="LUCKY STRIKE CONVERTIBLE">LUCKY STRIKE CONVERTIBLE</option>
+          <option value="LUCKY STRIKE ORIGEN">LUCKY STRIKE ORIGEN</option>
+          <option value="CAMEL">CAMEL</option>
+          <option value="MILENIO">MILENIO</option>
+          <option value="RED POINT">RED POINT</option>
+          <option value="DOLCHESTER">DOLCHESTER</option>
+          <option value="OTROS CIGARRILLOS">OTROS CIGARRILLOS</option>
+          <option value="VAN KIFF">VAN KIFF</option>
+          <option value="VAN HAASEN">VAN HAASEN</option>
+          <option value="FLANDRIA">FLANDRIA</option>
+          <option value="ARGENTO">ARGENTO</option>
+          <option value="SAYRIS">SAYRIS</option>
+          <option value="DRUM">DRUM</option>
+          <option value="RED FIELD">RED FIELD</option>
+          <option value="PACHAMAMA">PACHAMAMA</option>
+          <option value="PUEBLO">PUEBLO</option>
+          <option value="CERRITO">CERRITO</option>
+          <option value="ARGENTO">ARGENTO</option>
+          <option value="STANLEY">STANLEY</option>
+          <option value="OTROS TABACOS P/ARMAR">OTROS TABACOS P/ARMAR</option>
         </select>
+        
         <button type="submit">Continuar</button>
       </form>
     </div>
@@ -63,12 +87,11 @@
     <!-- Juego -->
     <div id="gameScreen" class="screen">
       <button id="btnJugar">🎲 JUGAR</button>
-      <div id="can"></div>
-      <div id="prizeOverlayContainer">
+      <div id="gameWrapper">
+        <div id="can"></div>
         <div id="prizeOverlay"></div>
       </div>
     </div>
-  </div>
 
   <div id="premioModal" class="modal">
     <h1>🎉 ¡Ganaste un premio! 🎉</h1>
