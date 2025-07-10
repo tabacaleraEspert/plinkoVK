@@ -294,9 +294,9 @@ function iniciarJuego() {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     const prizeValues = [
-        "👕", "🍺",
-        "🧣", "🍂", "🔑",
-        "🕶️", "🧢", "🧥"
+        "?", "?",
+        "?", "?", "?",
+        "?", "?", "?"
     ];
 
     const prizeColors = [
@@ -389,6 +389,7 @@ function iniciarJuego() {
     const yDropBall = startY*0.85
 
     function dropBall() {
+        reboteIndex = 0
         const ball = Bodies.circle(xDropBall, yDropBall, ballRadius, {
             restitution: 0.4,
             friction: 0.0,
@@ -456,7 +457,7 @@ function iniciarJuego() {
         { x: -0.8421, y: 0.6060 },
         { x: -0.5608, y: 0.8838 },
         { x: -0.2574, y: 1.4466 },
-        { x: 0.0618, y: 0.1894 },
+        { x: 0.0618, y: 0.1894 },+
         { x: 0.6238, y: 1.5000 },
         { x: 0.6544, y: 1.1551 },
         { x: -0.0970, y: 1.4568 },
