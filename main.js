@@ -13,13 +13,13 @@ document.getElementById("btnInstagram").addEventListener("click", async () => {
 
         // Guardás el emoji y nombre
         const premioNombre = data.Premio;
-        
+
 
         console.log("Premio elegido:", premioNombre);
 
         // ✅ Guardar en variable global (si querés mostrarlo luego)
         window.premioElegido = premioNombre;
-        
+
 
         // Ahora sí: soltar la bola
         // dropBall();
@@ -31,36 +31,54 @@ document.getElementById("btnInstagram").addEventListener("click", async () => {
 });
 
 const videos = [
-    "/WhatsApp Video 2025-06-25 at 10.41.33.mp4",
-    "/WhatsApp Video 2025-06-25 at 10.41.34.mp4",
-    "/WhatsApp Video 2025-06-25 at 11.02.19.mp4",
-    "/WhatsApp Video 2025-06-25 at 11.02.31.mp4",
+    "/whatsapp-video-2025-06-25-at-104134_4IYotq9I.webm"
+];
+
+const backgroundImages = [
+    "/Sobre_VK_3D_Bardi_Blossom_PNG.webp",
+    "/Sobre_VK_3D_Fabio_Mellow_PNG.webp",
+    "/Sobre_VK_3D_Fabio_Mine_PNG.webp",
+    // Agregá las que quieras
 ];
 
 const imagenes = [
-    "/Sobre_VK_3D_Bardi_Blossom_PNG.png",
-    "/Sobre_VK_3D_Fabio_Mellow_PNG.png",
-    "/Sobre_VK_3D_Fabio_Mine_PNG.png",
-    "/Sobre_VK_3D_Koon_Hazel_PNG.png",
-    "/Sobre_VK_3D_PengYubo_American_PNG.png",
-    "/Sobre_VK_3D_PengYubo_Native_PNG.png",
-    "/Sobre_VK_3D_Pyramid_Vid_PNG.png"
+    "/Sobre_VK_3D_Bardi_Blossom_PNG.webp",
+    "/Sobre_VK_3D_Fabio_Mellow_PNG.webp",
+    "/Sobre_VK_3D_Fabio_Mine_PNG.webp",
+    "/Sobre_VK_3D_Koon_Hazel_PNG.webp",
+    "/Sobre_VK_3D_PengYubo_American_PNG.webp",
+    "/Sobre_VK_3D_PengYubo_Native_PNG.webp",
+    "/Sobre_VK_3D_Pyramid_Vid_PNG.webp"
 ];
 
 document.getElementById("btnInstagram").addEventListener("click", irAlJuego);
-document.getElementById("btnCerrarModal").addEventListener("click", cerrarModal);
+// document.getElementById("btnCerrarModal").addEventListener("click", cerrarModal);
 window.addEventListener("DOMContentLoaded", () => {
-    cargarVideoAleatorio();
+    // cargarVideoAleatorio();
     cargarImagenAleatoria();
 });
 
-function cargarVideoAleatorio() {
-    const videoElement = document.getElementById("videoBackground");
-    const randomVideo = videos[Math.floor(Math.random() * videos.length)];
-    videoElement.querySelector("source").src = randomVideo;
-    videoElement.load();
-    videoElement.play().catch(e => console.log("No se pudo reproducir el video:", e));
+window.addEventListener("DOMContentLoaded", () => {
+    cargarFondoAleatorio();
+    cargarImagenAleatoria(); // tu función actual para la otra imagen
+});
+
+
+function cargarFondoAleatorio() {
+    const randomImg = backgroundImages[Math.floor(Math.random() * backgroundImages.length)];
+    document.body.style.backgroundImage = `url('${randomImg}')`;
+    document.body.style.backgroundSize = "cover";
+    document.body.style.backgroundPosition = "center";
+    document.body.style.backgroundRepeat = "no-repeat";
 }
+
+// function cargarVideoAleatorio() {
+//     const videoElement = document.getElementById("videoBackground");
+//     const randomVideo = videos[Math.floor(Math.random() * videos.length)];
+//     videoElement.querySelector("source").src = randomVideo;
+//     videoElement.load();
+//     videoElement.play().catch(e => console.log("No se pudo reproducir el video:", e));
+// }
 
 function cargarImagenAleatoria() {
     const randomImg = imagenes[Math.floor(Math.random() * imagenes.length)];
@@ -116,9 +134,44 @@ function mostrarModalPremio(premio) {
     confetti({ particleCount: 150, spread: 100, origin: { y: 0.6 } });
 }
 
-function cerrarModal() {
+// function cerrarModal() {
+//     document.getElementById("premioModal").style.display = "none";
+// }
+
+document.getElementById("btnCerrarModal").addEventListener("click", () => {
+    // Oculta modal de premio
     document.getElementById("premioModal").style.display = "none";
-}
+
+    // Muestra contenedor de video
+    document.getElementById("videoReclamoContainer").style.display = "flex";
+
+    const btnFinalizar = document.getElementById("btnFinalizar");
+    btnFinalizar.disabled = true;
+    btnFinalizar.textContent = "Esperá 20s...";
+
+    let segundos = 20;
+    const interval = setInterval(() => {
+        segundos--;
+        btnFinalizar.textContent = `Esperá ${segundos}s...`;
+        if (segundos <= 0) {
+            clearInterval(interval);
+            btnFinalizar.disabled = false;
+            btnFinalizar.textContent = "Finalizar";
+        }
+    }, 1000);
+
+    // (Opcional) Empieza automáticamente el video
+    const video = document.getElementById("videoReclamo");
+    video.play().catch(e => console.log("No se pudo reproducir el video automáticamente:", e));
+});
+
+document.getElementById("btnFinalizar").addEventListener("click", () => {
+    // Oculta el contenedor de video
+    document.getElementById("videoReclamoContainer").style.display = "none";
+
+    // ✅ Acá podrías mostrar un mensaje final o redirigir
+    alert("¡Gracias! Ahora podés reclamar tu premio 🎉");
+});
 
 function irAlJuego() {
     document.body.classList.add("no-scroll");
@@ -163,7 +216,20 @@ function lanzarConfetti() {
 }
 
 function iniciarJuego() {
-    document.getElementById("btnJugar").addEventListener("click", dropBall);
+    document.getElementById("btnJugar").addEventListener("click", function handleClick() {
+        // Llamar tu función
+        dropBall();
+
+        // Desactivar el botón
+        this.disabled = true;
+
+        // Opcional: cambiar estilo para mostrar que quedó desactivado
+        this.style.opacity = "0.5";
+        this.style.cursor = "not-allowed";
+
+        // Si querés también eliminar el event listener para evitar futuros clics:
+        // this.removeEventListener("click", handleClick);
+    });
 
     const { Engine, Render, World, Bodies, Body, Events } = Matter;
 
@@ -172,8 +238,8 @@ function iniciarJuego() {
 
     const engine = Engine.create();
     engine.world.gravity.y = 0.2;
-    const currentWidth =  window.innerWidth;
-    const currentHeight =  window.innerHeight;
+    const currentWidth = window.innerWidth;
+    const currentHeight = window.innerHeight;
 
     const render = Render.create({
         element: document.getElementById("can"),
@@ -190,7 +256,7 @@ function iniciarJuego() {
     ///////////// X ESCALAR SEGUN WIDTH
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     console.log("current width: ", currentWidth)
-    console.log("current height: ", currentHeight)    
+    console.log("current height: ", currentHeight)
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ///////////// PALITOS DE LA PIRAMIEDE
@@ -200,12 +266,12 @@ function iniciarJuego() {
     const rows = 14;
     const spacingX = 20
     const spacingY = 20
-    const startY = currentHeight*.3
+    const startY = currentHeight * .3
     const pegRadius = 3
-    
+
     for (let row = 0; row < rows; row++) {
         const pegsInRow = row + 3;
-        const offsetX = (currentWidth/2) - (pegsInRow - 1) * spacingX / 2;
+        const offsetX = (currentWidth / 2) - (pegsInRow - 1) * spacingX / 2;
 
         for (let i = 0; i < pegsInRow; i++) {
             const x = offsetX + i * spacingX;
@@ -224,12 +290,12 @@ function iniciarJuego() {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ///////////// LIMITES
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    const margenEntrePirámideYPremios = spacingY*1.5;
-    let yUltimaFila = startY + (rows + 1 ) * spacingY;
+    const margenEntrePirámideYPremios = spacingY * 1.5;
+    let yUltimaFila = startY + (rows + 1) * spacingY;
     const overlayTop = yUltimaFila + margenEntrePirámideYPremios;
     const overlay = document.getElementById("prizeOverlay");
 
-    const xInferiorWall = currentWidth/2;
+    const xInferiorWall = currentWidth / 2;
     const widthInferiorWall = currentWidth;
     const heightInferiorWall = 10;
 
@@ -245,7 +311,7 @@ function iniciarJuego() {
 
     const widthRightWall = 10
     const xRightWall = currentWidth - (widthRightWall / 2); ///Mitad de pantalla deberia ser
-    const yRightWall = currentHeight/2     ///PENSAR COMO PINGO HACER
+    const yRightWall = currentHeight / 2     ///PENSAR COMO PINGO HACER
     const heightRightWall = currentHeight
 
 
@@ -294,9 +360,9 @@ function iniciarJuego() {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     const prizeValues = [
-        "?", "?",
-        "?", "?", "?",
-        "?", "?", "?"
+        "4", "3",
+        "2", "1", "1",
+        "2", "3", "4"
     ];
 
     const prizeColors = [
@@ -318,8 +384,8 @@ function iniciarJuego() {
     const startPremioX = 0
     const heightDiv = 30
 
-    const yStartDivs = yUltimaFila + margenEntrePirámideYPremios + spacingY/2;
-    
+    const yStartDivs = yUltimaFila + margenEntrePirámideYPremios + spacingY / 2;
+
     overlay.innerHTML = "";
 
     // 🟢 Estilos de overlay
@@ -342,7 +408,7 @@ function iniciarJuego() {
         const prize = document.createElement("div");
         prize.textContent = prizeValues[i % prizeValues.length];
         prize.style.width = `${spacingPremio}px`;
-        prize.style.height =  `${heightDiv}px`;
+        prize.style.height = `${heightDiv}px`;
         prize.style.lineHeight = "30px";
         prize.style.textAlign = "center";
         prize.style.fontSize = "18px";
@@ -358,16 +424,16 @@ function iniciarJuego() {
     }
 
 
-    
+
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ///////////// DIVS DE PREMIOS
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    const startOfDivisores = startY + rows * spacingY + heightDiv/2
+    const startOfDivisores = startY + rows * spacingY + heightDiv / 2
     for (let i = 0; i <= prizeValues.length; i++) {
         // const xDiv = startPremioX+30 + i * (spacingPremio+30);
         const xDiv = startPremioX + i * (spacingPremio);
-        const divider = Bodies.rectangle(xDiv,   startOfDivisores, 2, 20, {
+        const divider = Bodies.rectangle(xDiv, startOfDivisores, 2, 20, {
             isStatic: true,
             render: { fillStyle: "white" }
         });
@@ -385,8 +451,8 @@ function iniciarJuego() {
     ///////////// PELOTA
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     const ballRadius = 6
-    const xDropBall = currentWidth/2
-    const yDropBall = startY*0.85
+    const xDropBall = currentWidth / 2
+    const yDropBall = startY * 0.85
 
     function dropBall() {
         reboteIndex = 0
@@ -432,7 +498,8 @@ function iniciarJuego() {
                 }
 
                 const result = prizeValues[closest];
-                mostrarModalPremio(result);
+                console.log("Premio elegido desde back", window.premioElegido)
+                mostrarModalPremio(window.premioElegido);
 
                 // Registrar en backend
                 const email = localStorage.getItem("lastEmail") || "sin_email";
@@ -457,7 +524,7 @@ function iniciarJuego() {
         { x: -0.8421, y: 0.6060 },
         { x: -0.5608, y: 0.8838 },
         { x: -0.2574, y: 1.4466 },
-        { x: 0.0618, y: 0.1894 },+
+        { x: 0.0618, y: 0.1894 }, +
         { x: 0.6238, y: 1.5000 },
         { x: 0.6544, y: 1.1551 },
         { x: -0.0970, y: 1.4568 },
@@ -483,8 +550,8 @@ function iniciarJuego() {
         { x: -0.5778, y: 0.4005 },
         { x: -1.4195, y: 0.5672 },
         { x: -0.4604, y: 0.8449 }
-      ];
-      let reboteIndex = 0;
+    ];
+    let reboteIndex = 0;
 
     Events.on(engine, "collisionStart", (event) => {
         const { pairs } = event;
@@ -502,28 +569,28 @@ function iniciarJuego() {
             if (peg && bola) {
                 crearOndaExpansiva(peg.position.x, peg.position.y);
 
-                // // // Dirección aleatoria y velocidad "caótica"
-                // const direccion = Math.random() < 0.5 ? -1 : 1;
-                // const velocidadX = direccion * (Math.random() * 1.5); // entre -3 y 3 aprox
-                // // Reemplazamos la velocidad X
-                // Matter.Body.setVelocity(bola, {
-                //     x: velocidadX,
-                //     y: bola.velocity.y, // mantenemos la velocidad vertical
-                // });
-                // console.log(`💥 velocidadX: ${velocidadX.toFixed(4)}`);
-                // console.log(`💥 velocidadY: ${ bola.velocity.y}`);
+                // // Dirección aleatoria y velocidad "caótica"
+                const direccion = Math.random() < 0.5 ? -1 : 1;
+                const velocidadX = direccion * (Math.random() * 1.5); // entre -3 y 3 aprox
+                // Reemplazamos la velocidad X
+                Matter.Body.setVelocity(bola, {
+                    x: velocidadX,
+                    y: bola.velocity.y, // mantenemos la velocidad vertical
+                });
+                console.log(`💥 velocidadX: ${velocidadX.toFixed(4)}`);
+                console.log(`💥 velocidadY: ${bola.velocity.y}`);
 
-                if (reboteIndex > 1 && reboteIndex < listaVelocidades.length) {
-                    const velocidad = listaVelocidades[reboteIndex];
-            
-                    // Asignar la velocidad definida
-                    Matter.Body.setVelocity(bola, {
-                      x: velocidad.x,
-                      y: bola.velocity.y + velocidad.y // opcional: sumar al Y
-                    });
-            
-                    reboteIndex++; // Pasar al siguiente rebote
-                  }
+                // if (reboteIndex > 1 && reboteIndex < listaVelocidades.length) {
+                //     const velocidad = listaVelocidades[reboteIndex];
+
+                //     // Asignar la velocidad definida
+                //     Matter.Body.setVelocity(bola, {
+                //       x: velocidad.x,
+                //       y: bola.velocity.y + velocidad.y // opcional: sumar al Y
+                //     });
+
+                //     reboteIndex++; // Pasar al siguiente rebote
+                //   }
 
             }
         });

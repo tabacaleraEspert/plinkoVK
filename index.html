@@ -12,18 +12,21 @@
 </head>
 
 <body>
-  <!-- <video autoplay muted loop id="videoBackground">
-    <source src="" type="video/mp4" />
+  <!-- <video autoplay muted loop id="videoBackground" preload="auto" >
+    <source  type="video/mp4" />
     Tu navegador no soporta el video HTML5.
-  </video> -->
+  </video>
+  <div id="overlayBlocker"></div> -->
+  <div id="backgroundImages"></div>
+
 
   <div class="contenidoPrincipal">
     <div id="imagenRandomContainer">
-      <img id="imagenRandom" src="" alt="Imagen aleatoria" />
+      <img id="imagenRandom" src="" alt="Imagen aleatoria"  loading="lazy" />
     </div>
 
     <!-- Formulario -->
-    <div id="formScreen" class="screen">
+    <div id="formScreen" class="screen active">
       <h1>Registrate para jugar</h1>
       <form id="registerForm">
         <input type="text" id="nombreCompleto" placeholder="Nombre Completo" required />
@@ -76,7 +79,7 @@
     </div>
 
     <!-- Instagram -->
-    <div id="instagramScreen" class="screen active">
+    <div id="instagramScreen" class="screen">
       <div class="instagram-content">
         <h1>¡Seguinos en Instagram!</h1>
         <a href="https://www.instagram.com/vankiff/" target="_blank" class="instagram-handle">@vankiff</a>
@@ -96,8 +99,17 @@
   <div id="premioModal" class="modal">
     <h1>🎉 ¡Ganaste un premio! 🎉</h1>
     <p id="textoPremio"></p>
-    <button id="btnCerrarModal">Cerrar</button>
+    <button id="btnCerrarModal">🎥Ver video para reclamar tu premio</button>
     <canvas id="confettiCanvas"></canvas>
+  </div>
+
+  <div id="videoReclamoContainer" class="modal" style="display: none;">
+    <h2>🎥 Ver video para reclamar tu premio</h2>
+    <video id="videoReclamo" width="320" controls>
+      <source src="/WhatsApp Video 2025-07-07 at 10.mp4" type="video/mp4" />
+      Tu navegador no soporta el video.
+    </video>
+    <button id="btnFinalizar">Finalizar</button>
   </div>
 
   <audio id="bgm" loop>
