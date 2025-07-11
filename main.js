@@ -35,9 +35,8 @@ const videos = [
 ];
 
 const backgroundImages = [
-    "/Sobre_VK_3D_Bardi_Blossom_PNG.webp",
-    "/Sobre_VK_3D_Fabio_Mellow_PNG.webp",
-    "/Sobre_VK_3D_Fabio_Mine_PNG.webp",
+    "/WhatsApp-Image-2025-07-10-at-16.38.42-_1_.webp",
+
     // Agregá las que quieras
 ];
 
