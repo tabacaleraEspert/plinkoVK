@@ -40,6 +40,17 @@ const backgroundImages = [
     // Agregá las que quieras
 ];
 
+const bgDiv = document.getElementById("backgroundImages");
+bgDiv.classList.add("placeholder-bg")
+
+const img = new Image();
+img.src =  "/WhatsApp-Image-2025-07-10-at-16.38.42-_1_.webp";
+
+img.onload = () => {
+  bgDiv.style.backgroundImage = `url('${img.src}')`;
+  bgDiv.classList.remove("placeholder-bg");
+};
+
 const imagenes = [
     "/Sobre_VK_3D_Bardi_Blossom_PNG.webp",
     "/Sobre_VK_3D_Fabio_Mellow_PNG.webp",
@@ -236,7 +247,7 @@ function iniciarJuego() {
     const prizeZones = [];
 
     const engine = Engine.create();
-    engine.world.gravity.y = 0.2;
+    engine.gravity.y = 0.2;
     const currentWidth = window.innerWidth;
     const currentHeight = window.innerHeight;
 
@@ -323,7 +334,7 @@ function iniciarJuego() {
             {
                 isStatic: true,
                 label: "inferiorWall",
-                render: { fillStyle: "#FF0000" }
+                render: { visible: false }
             }
         ),
         Bodies.rectangle(
@@ -333,7 +344,7 @@ function iniciarJuego() {
             heightLeftWall,
             {
                 isStatic: true,
-                render: { fillStyle: "#00FF00" } // 🟢 Verde
+                render: { visible: false} // 🟢 Verde
             }
         ),
         Bodies.rectangle(
@@ -343,7 +354,7 @@ function iniciarJuego() {
             heightRightWall,
             {
                 isStatic: true,
-                render: { fillStyle: "#0000FF" } // 🔵 Azul
+                render: {visible: false } // 🔵 Azul
             }
         ),
 
@@ -432,7 +443,7 @@ function iniciarJuego() {
     for (let i = 0; i <= prizeValues.length; i++) {
         // const xDiv = startPremioX+30 + i * (spacingPremio+30);
         const xDiv = startPremioX + i * (spacingPremio);
-        const divider = Bodies.rectangle(xDiv, startOfDivisores, 2, 20, {
+        const divider = Bodies.rectangle(xDiv, startOfDivisores, 2, 10, {
             isStatic: true,
             render: { fillStyle: "white" }
         });
@@ -454,7 +465,7 @@ function iniciarJuego() {
     const yDropBall = startY * 0.85
 
     function dropBall() {
-        reboteIndex = 0
+        
         const ball = Bodies.circle(xDropBall, yDropBall, ballRadius, {
             restitution: 0.4,
             friction: 0.0,
@@ -624,7 +635,7 @@ function iniciarJuego() {
 
 
 
-    Engine.run(engine);
+    Matter.Runner.run(engine)
     Render.run(render);
 }
 
