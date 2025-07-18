@@ -173,6 +173,23 @@ body {
   height: 100%;
   pointer-events: none;
 }
+#btnJugar {
+  font-size: 2rem;           /* Letra más grande */
+  padding: 1rem 2rem;        /* Más espacio interno */
+  background: linear-gradient(135deg, #ff7e5f, #feb47b); /* Gradiente lindo */
+  color: white;              /* Color de texto */
+  border: none;             /* Sin borde */
+  border-radius: 10px;       /* Bordes redondeados */
+  cursor: pointer;          /* Cursor de mano */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3); /* Sombra */
+  transition: all 0.3s ease; /* Animación suave */
+}
+
+#btnJugar:hover {
+  transform: scale(1.1);   /* Efecto agrandarse al pasar el mouse */
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+}
+
 
 /* 📲 Mobile (hasta 480px) */
 @media (max-width: 480px) {
@@ -346,6 +363,23 @@ body {
   height: 100%;
   background: rgba(0, 0, 0, 0.4); /* Ajustá la opacidad aquí */
   z-index: -1; /* Para que quede encima del fondo pero debajo de todo lo demás */
+}
+
+#btnJugar {
+  font-size: 2rem;           /* Letra más grande */
+  padding: 1rem 2rem;        /* Más espacio interno */
+  background: linear-gradient(135deg, #ff7e5f, #feb47b); /* Gradiente lindo */
+  color: white;              /* Color de texto */
+  border: none;             /* Sin borde */
+  border-radius: 10px;       /* Bordes redondeados */
+  cursor: pointer;          /* Cursor de mano */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3); /* Sombra */
+  transition: all 0.3s ease; /* Animación suave */
+}
+
+#btnJugar:hover {
+  transform: scale(1.1);   /* Efecto agrandarse al pasar el mouse */
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
 }
 
 
